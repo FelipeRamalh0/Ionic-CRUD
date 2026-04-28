@@ -7,22 +7,31 @@ import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 
-// Importações do SDK Modular do Firebase
-import { initializeApp, provideFirebaseApp } from '@angular/fire/app'; // Função para inicializar o app Firebase
-import { getFirestore, provideFirestore } from '@angular/fire/firestore'; // Funções para o Firestore
+// Importações do SDK do Firebase
+import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
+import { provideAuth, getAuth } from '@angular/fire/auth';
+import { provideFirestore } from '@angular/fire/firestore';   // opcional, se você usar Firestore depois
 
-import { environment } from '../environments/environment'; // Suas configurações do ambiente
+import { environment } from '../environments/environment';   // Suas configurações do Firebase
+import { getFirestore } from 'firebase/firestore';
 
 @NgModule({
   declarations: [AppComponent],
-  imports: [BrowserModule,
+  imports: [
+    BrowserModule,
     IonicModule.forRoot(),
-    AppRoutingModule
-    ],
-  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+    AppRoutingModule,
+  ],
+  providers: [
+    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+
+    // Configuração do Firebase
     provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
-    // Provisão do Firestore
-    provideFirestore(() => getFirestore())
+provideFirestore(()=> getFirestore()),
+    provideAuth(() => getAuth()),           // ← Importante para autenticação
+
+    // Se você for usar Firestore no futuro, descomente esta linha:
+    // provideFirestore(() => getFirestore()),
   ],
   bootstrap: [AppComponent],
 })
